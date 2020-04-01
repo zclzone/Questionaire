@@ -1,5 +1,6 @@
 <template>
-  <div class="ques-item">
+  <div class="ques-item"
+       v-show="isShow">
     <h3 class="title">{{`${question.Seq_No}. ${question.Question_Desc}`}}</h3>
     <component :is="question.component"
                :question="question"
@@ -30,16 +31,24 @@ export default {
   data () {
     return {
       isValid: true,
+      isShow: true,
       msg: ''
     }
   },
   methods: {
-    trigFunc (val) {
+    trigFunc (val, Have_Next_Level, Next_Level_Rid) {
       if (val && this.question.Question_Desc.includes('工号')) {
         if (val === '004618') {
           this.$emit('trigChangeName', 'Ronnie Zhang')
           this.$emit('trigChangeID', '367845199804055858')
         }
+      }
+      if (Have_Next_Level && Have_Next_Level === 'N') {
+        // 隐藏下一道题目
+        this.$emit('trigShowQues', Next_Level_Rid, false)
+      } else {
+        // 显示下一道题目
+        Next_Level_Rid && this.$emit('trigShowQues', Next_Level_Rid, true)
       }
       this.validateAnswer()
     },
@@ -47,7 +56,17 @@ export default {
       this.isValid = isValid
       this.msg = msg
     },
+    handleShowQues (isShow) {
+      this.isShow = isShow
+      if (!isShow) {
+        this.setValidStatu(true, '')
+        this.$refs.ques.value = null
+      }
+    },
     validateAnswer () {
+      if (!this.isShow) {
+        return true
+      }
       switch (this.question.Question_Type) {
         case 'A':
           if (!this.Answer.Answer_No) {
@@ -58,7 +77,9 @@ export default {
         case 'C':
           if (!this.Answer.Answer_No.length) {
             this.setValidStatu(false, '至少选择一项')
+            return false
           }
+          break
         case 'B':
           // 校验手机号
           if (this.question.Question_Desc.includes('手机号')) {
@@ -102,7 +123,7 @@ export default {
     Answer () {
       return {
         Rid: this.question.Rid,
-        Answer_No: this.$refs.ques.value,
+        Answer_No: this.$refs.ques.value || '',
         isValid: this.isValid
       }
     }

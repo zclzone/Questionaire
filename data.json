@@ -52,7 +52,9 @@
       "Rid": "1E1C977D-0A12-4909-BC87-C4E85ACF7E94",
       "Answer_Desc": "是",
       "Answer_No": "A",
-      "Visible_Default": "Y"
+      "Visible_Default": "Y",
+      "Have_Next_Level": "Y",
+      "Next_Level_Rid": "AFA662C0-C922-4E82-9822-9E3A7498D658"
     },
     {
       "Seq_No": 7,
@@ -61,7 +63,9 @@
       "Rid": "1E1C977D-0A12-4909-BC87-C4E85ACF7E94",
       "Answer_Desc": "否",
       "Answer_No": "B",
-      "Visible_Default": "Y"
+      "Visible_Default": "Y",
+      "Have_Next_Level": "N",
+      "Next_Level_Rid": "AFA662C0-C922-4E82-9822-9E3A7498D658"
     },
     {
       "Seq_No": 8,

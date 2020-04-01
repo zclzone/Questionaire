@@ -3,7 +3,7 @@
     <div v-for="(item,index) in question.Answer"
          :key="index">
       <el-radio v-model="value"
-                @change="onChange"
+                @change="onChange(item.Have_Next_Level,item.Next_Level_Rid)"
                 :label="item.Answer_No">{{item.Answer_Desc}}</el-radio>
     </div>
   </div>
@@ -26,8 +26,8 @@ export default {
     }
   },
   methods: {
-    onChange () {
-      this.$emit('trigFunc', this.value)
+    onChange (Have_Next_Level, Next_Level_Rid) {
+      this.$emit('trigFunc', this.value, Have_Next_Level, Next_Level_Rid)
     }
   },
   computed: {

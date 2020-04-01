@@ -6,6 +6,7 @@
                    :question="val"
                    @trigChangeName="trigChangeName"
                    @trigChangeID="trigChangeID"
+                   @trigShowQues="trigShowQues"
                    ref="quesItem" />
     <div class="submit">
       <el-button type="primary"
@@ -56,17 +57,28 @@ export default {
         }
       }
     },
+    trigShowQues (Rid, isShow) {
+      for (let i = 0; i < this.$refs.quesItem.length; i++) {
+        const quesItem = this.$refs.quesItem[i]
+        if (quesItem.question.Rid === Rid) {
+          quesItem.handleShowQues && quesItem.handleShowQues(isShow)
+          return
+        }
+      }
+    },
     submit () {
       const Answers = this.getAnswers()
+      console.log(Answers);
       if (Answers.some(answer => !answer.isValid)) {
         console.error('validate error');
       } else {
-        alert('submit success')
         this.$message({
           message: 'submit success',
           type: 'success'
         })
-        location.reload();
+        setTimeout(() => {
+          location.reload()
+        }, 2000)
       }
     },
     getAnswers () {
@@ -85,14 +97,24 @@ export default {
       const questions = {}
       for (const question of this.questionsData) {
         if (questions[`ques${question.Seq_No}`]) {
-          questions[`ques${question.Seq_No}`].Answer.push({ Answer_Desc: question.Answer_Desc, Answer_No: question.Answer_No })
+          questions[`ques${question.Seq_No}`].Answer.push({
+            Answer_Desc: question.Answer_Desc,
+            Answer_No: question.Answer_No,
+            Have_Next_Level: question.Have_Next_Level || 'N',
+            Next_Level_Rid: question.Next_Level_Rid || ''
+          })
         } else {
           questions[`ques${question.Seq_No}`] = {}
           questions[`ques${question.Seq_No}`].Seq_No = question.Seq_No
           questions[`ques${question.Seq_No}`].Question_Type = question.Question_Type
           questions[`ques${question.Seq_No}`].Question_Desc = question.Question_Desc
           questions[`ques${question.Seq_No}`].Rid = question.Rid
-          questions[`ques${question.Seq_No}`].Answer = [{ Answer_Desc: question.Answer_Desc, Answer_No: question.Answer_No }]
+          questions[`ques${question.Seq_No}`].Answer = [{
+            Answer_Desc: question.Answer_Desc,
+            Answer_No: question.Answer_No,
+            Have_Next_Level: question.Have_Next_Level || 'N',
+            Next_Level_Rid: question.Next_Level_Rid || ''
+          }]
           questions[`ques${question.Seq_No}`].Visible_Default = question.Visible_Default
           questions[`ques${question.Seq_No}`].component = `Type${question.Question_Type}`
           if (question.Question_Type === 'E') {
